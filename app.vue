@@ -15,7 +15,7 @@
 
 const filed = ref<number[][]>([])
 const filedSize = ref(50)
-const speed = ref(25)
+const speed = ref(5)
 
 const ant = ref<Coordinate>({
   x: 0,
