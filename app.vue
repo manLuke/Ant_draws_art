@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page">
-      <div class="filed-container">
+      <div class="filed-container" :style="{ '--size': cssSize }">
         <div v-for="i in filedSize" :key="i" class="filed-row" >
           <div v-for="j in filedSize" :key="j" class="filed-cell" :class="{ 'cell-1': isColored(i-1,j-1), 'cell-ant': isAnt(i-1,j-1) }" ></div>
         </div>
@@ -14,8 +14,8 @@
 <script setup lang="ts">
 
 const filed = ref<number[][]>([])
-const filedSize = ref(25)
-const speed = ref(50)
+const filedSize = ref(50)
+const speed = ref(25)
 
 const ant = ref<Coordinate>({
   x: 0,
@@ -65,6 +65,28 @@ const play = async () => {
   window.requestAnimationFrame(play);
 }
 
+// responsive style
+
+const windowWidth = ref(window.innerWidth)
+const windowHeight = ref(window.innerHeight)
+const cssSize = computed(() => {
+  if ((windowHeight.value - 100) < windowWidth.value) {
+    return (windowHeight.value - 200) / (filedSize.value + 1) + "px"
+  }
+  if (windowWidth.value < 800) {
+    return windowWidth.value / (filedSize.value + 1) + "px"
+  } else {
+    return 800 / filedSize.value + "px"
+  }
+})
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    windowWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+  })
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -91,8 +113,8 @@ const play = async () => {
   @include flex-center;
   background-color: #0e1246;
   text-align: center;
-  width: 1rem;
-  height: 1rem;
+  width: var(--size);
+  aspect-ratio: 1;
 }
 
 .cell-1 {
